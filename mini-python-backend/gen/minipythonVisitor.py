@@ -1,4 +1,4 @@
-# Generated from C:/Users/geral/Desktop/Proyecto Compi/mini-python-backend/tarea4\minipython.g4 by ANTLR 4.9.2
+# Generated from C:/Users/geral/Desktop/proyecto-compiladores/mini-python-backend\minipython.g4 by ANTLR 4.9.2
 from antlr4 import *
 if __name__ is not None and "." in __name__:
     from .minipythonParser import minipythonParser
@@ -34,11 +34,6 @@ class minipythonVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by minipythonParser#astIfStatment.
-    def visitAstIfStatment(self, ctx:minipythonParser.AstIfStatmentContext):
-        return self.visitChildren(ctx)
-
-
     # Visit a parse tree produced by minipythonParser#astWhileStatment.
     def visitAstWhileStatment(self, ctx:minipythonParser.AstWhileStatmentContext):
         return self.visitChildren(ctx)
@@ -46,6 +41,11 @@ class minipythonVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by minipythonParser#astForStatement.
     def visitAstForStatement(self, ctx:minipythonParser.AstForStatementContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by minipythonParser#astIfStatment.
+    def visitAstIfStatment(self, ctx:minipythonParser.AstIfStatmentContext):
         return self.visitChildren(ctx)
 
 
