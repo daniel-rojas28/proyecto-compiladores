@@ -116,7 +116,7 @@ class codeGen(minipythonVisitor):
 
     def visitAstAssignStatment(self, ctx: minipythonParser.AstAssignStatmentContext):
         if (self.buscarVariableDefinida(ctx.IDENTIFIER().getText(), self.variablesLocalesDefinidas) == False):
-            self.generate("PUSH_LOCAL", ctx.IDENTIFIER().getText())  # NO DEBERÍA HACERSE SIEMPRE EL PUSH
+            self.generate("PUSH_LOCAL", ctx.IDENTIFIER().getText())
         self.visit(ctx.expression())
         self.generate("STORE_FAST", ctx.IDENTIFIER().getText())
         return None
@@ -211,7 +211,6 @@ class codeGen(minipythonVisitor):
 
     def visitAstDesignatorAST(self, ctx: minipythonParser.AstDesignatorASTContext):
         if (ctx.expressionList() == None):
-            # deberíamos saber si es FAST o GLOBAL
             self.generate("LOAD_FAST", ctx.IDENTIFIER().getText())
         else:
             cant_params = self.visit(ctx.expressionList())
