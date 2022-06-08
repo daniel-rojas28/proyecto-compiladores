@@ -1,0 +1,12 @@
+def method1(num):
+    print("Resultado: " )
+    var = method2(num)
+    print(var)
+
+def method2(num1):
+    return num1 + 5
+
+def main():
+    method1(5)
+
+main()
