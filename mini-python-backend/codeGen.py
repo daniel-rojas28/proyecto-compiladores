@@ -1,7 +1,6 @@
 from gen.minipythonVisitor import minipythonVisitor
 from gen.minipythonLexer import minipythonLexer 
 from gen.minipythonParser import minipythonParser
-from SymbolTable import SymbolTable
 from antlr4 import *
 
 class codeGen(minipythonVisitor):
@@ -12,9 +11,6 @@ class codeGen(minipythonVisitor):
             self.arg = a
 
     def __init__(self):
-        self.table = SymbolTable()
-        self.errors = []
-
         self.codigo = []
         self.instActual = 0
         self.variablesLocalesDefinidas = []

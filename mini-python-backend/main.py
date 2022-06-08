@@ -1,4 +1,5 @@
 from codeGen import codeGen
+from codeContext import CodeContext
 from gen.minipythonLexer import minipythonLexer
 from gen.minipythonParser import minipythonParser
 
@@ -36,50 +37,6 @@ class MyErrorListener(ErrorListener):
             else:
                 self.newErrors.append("OTHER ERROR - line " + str(line) + ":" + str(column) + " " + msg)
 
-
-
-@app.route('/checkFile', methods=["POST"])
-def checkFile():
-    try:
-        myListener = MyErrorListener()
-        file = request.files['file']
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
-        path = "./UPLOAD_FOLDER/" + file.filename
-
-        input = FileStream(path)
-
-        inst = minipythonLexer(input)
-        tokens = CommonTokenStream(inst)
-        parser = minipythonParser(tokens)
-
-        inst.removeErrorListeners()
-        inst.addErrorListener(myListener)
-
-        parser.removeErrorListeners()
-        parser.addErrorListener(myListener)
-
-        print("ARBOL")
-        tree = parser.program()
-        # print(Trees.toStringTree(tree, None, parser))
-
-        print("VISITOR")
-        v = codeGen()
-        generar_bytecode(v.visit(tree))
-
-        for i in v.errors:
-            print(i)
-
-        # tokensList = printTokens(inst.getAllTokens())
-
-        if os.path.exists(path):
-            os.remove(path)
-        errors = myListener.newErrors
-        return {'tokens': "tokens",
-                'errors': errors}, 200
-    except Exception as e:
-        return {'message': str(e)}, 400
-
-
 def printTokens(tokens):
     tokensResponse = []
     print("---TOKENS---")
@@ -102,18 +59,56 @@ def generar_bytecode(codigo):
     f.close()
 
 def main():
-    input = FileStream('./test.txt')
-    lexer = minipythonLexer(input)
-    stream = CommonTokenStream(lexer)
-    parser = minipythonParser(stream)
-    tree = parser.program()
-    v = codeGen()
-    generar_bytecode(v.visit(tree))
-    
-    print("\nEJECUCIÓN: ")
-    os.system("MiniPy bytecode.txt")
+    # lexer = minipythonLexer(input)
+    # stream = CommonTokenStream(lexer)
+    # parser = minipythonParser(stream)
+    # tree = parser.program()
+    # code_gen_visitor = codeGen()
+    # generar_bytecode(code_gen_visitor.visit(tree))
+    try:
+
+
+        myListener = MyErrorListener()
+        input = FileStream('./test.txt')
+        inst = minipythonLexer(input)
+        tokens = CommonTokenStream(inst)
+        parser = minipythonParser(tokens)
+
+        inst.removeErrorListeners()
+        inst.addErrorListener(myListener)
+
+        parser.removeErrorListeners()
+        parser.addErrorListener(myListener)
+
+        # print("ARBOL")
+        tree = parser.program()
+        # print(tree)
+        # print(Trees.toStringTree(tree, None, parser))
+
+        print("------------------ CODE GEN ------------------")
+        code_gen_visitor = codeGen()
+        generar_bytecode(code_gen_visitor.visit(tree))
+
+        print("------------------ CODE CONTEXT ------------------")
+        code_context = CodeContext()
+
+        for i in code_context.errors:
+            print(i)
+
+        # tokensList = printTokens(inst.getAllTokens())
+
+        errors = myListener.newErrors
+
+        print("------- CONTEXT ERRORS -------")
+        print(errors)
+
+        print("--------------")
+        print("EJECUCIÓN: ")
+        os.system("MiniPy bytecode.txt")
+    except Exception as e:
+        print({'message': str(e)})
 
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8080, debug=True)
+    main()
